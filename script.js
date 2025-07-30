@@ -1,15 +1,17 @@
-const toggleSidebarBtn = document.getElementById('toggleSidebar');
-const toggleThemeBtn = document.getElementById('toggleTheme');
-const sidebar = document.getElementById('sidebar');
+const menuToggle = document.getElementById('menuToggle');
+const sidebarNav = document.getElementById('sidebarNav');
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
 
-// Sidebar toggle for mobile
-toggleSidebarBtn.addEventListener('click', () => {
-  sidebar.classList.toggle('active');
+// Sidebar toggle
+menuToggle.addEventListener('click', () => {
+  sidebarNav.classList.toggle('show');
 });
 
-// Dark/light mode toggle
-toggleThemeBtn.addEventListener('click', () => {
-  document.body.classList.toggle('dark');
-  themeToggle.style.color = isLight ? "#ff5c5c" : "#ffffff";
-
+// Theme toggle
+themeToggle.addEventListener('click', () => {
+  const isLight = body.classList.contains('light-mode');
+  body.classList.toggle('light-mode', !isLight);
+  body.classList.toggle('dark-mode', isLight);
+  themeToggle.textContent = isLight ? '🌙' : '☀️';
 });
