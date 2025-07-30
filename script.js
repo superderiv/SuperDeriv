@@ -1,31 +1,13 @@
-// Sidebar toggle
-const menuToggle = document.getElementById('menuToggle');
-const nav = document.getElementById('sidebarNav');
+const toggleSidebarBtn = document.getElementById('toggleSidebar');
+const toggleThemeBtn = document.getElementById('toggleTheme');
+const sidebar = document.getElementById('sidebar');
 
-menuToggle.addEventListener('click', () => {
-  nav.classList.toggle('show');
+// Sidebar toggle for mobile
+toggleSidebarBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('active');
 });
 
-// Theme toggle
-const themeToggle = document.getElementById('themeToggle');
-const body = document.body;
-
-function setTheme(mode) {
-  if (mode === 'light') {
-    body.classList.add('light-mode');
-    themeToggle.innerHTML = '🌙';
-  } else {
-    body.classList.remove('light-mode');
-    themeToggle.innerHTML = '☀️';
-  }
-  localStorage.setItem('theme', mode);
-}
-
-themeToggle.addEventListener('click', () => {
-  const isLight = body.classList.contains('light-mode');
-  setTheme(isLight ? 'dark' : 'light');
+// Dark/light mode toggle
+toggleThemeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark');
 });
-
-// Load saved theme
-const savedTheme = localStorage.getItem('theme') || 'dark';
-setTheme(savedTheme);
