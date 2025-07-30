@@ -1,5 +1,5 @@
 const derivAppID = "B5xH6FKkZi0OmFA";
-const ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${derivAppID}`);
+const ws = new WebSocket("wss://ws.derivws.com/websockets/v3?app_id=B5xH6FKkZi0OmFA");
 
 let symbolGroups = {
   Forex: [],
