@@ -1,74 +1,101 @@
 const derivAppID = "B5xH6FKkZi0OmFA";
 const ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${derivAppID}`);
 
-// Symbol mapping
-const derivSymbols = {
-  EURUSD: "frxEURUSD",
-  AUDJPY: "frxAUDJPY",
-  Boom1000: "boom_1000_index",
-  Crash300: "crash_300_index",
-  XAUUSD: "frxXAUUSD",
-  XAGUSD: "frxXAGUSD",
-  BTCUSD: "cryBTCUSD",
-  ETHUSD: "cryETHUSD",
+let symbolGroups = {
+  Forex: [],
+  Synthetic: [],
+  Commodities: [],
+  Crypto: [],
 };
 
-// Symbol data (contractSize, minLot)
-const symbolData = {
-  EURUSD: { minLot: 0.01, contractSize: 100000 },
-  AUDJPY: { minLot: 0.01, contractSize: 100000 },
-  Boom1000: { minLot: 0.2, contractSize: 1 },
-  Crash300: { minLot: 0.2, contractSize: 1 },
-  XAUUSD: { minLot: 0.01, contractSize: 100 },
-  XAGUSD: { minLot: 0.01, contractSize: 5000 },
-  BTCUSD: { minLot: 0.01, contractSize: 1 },
-  ETHUSD: { minLot: 0.01, contractSize: 10 },
+let symbolMeta = {}; // Holds apiSymbol → { minLot, pipSize, displayName }
+
+let selectedSymbolAPI = "";
+
+// STEP 1: Fetch all active symbols grouped by market
+ws.onopen = () => {
+  ws.send(JSON.stringify({ active_symbols: "brief", product_type: "basic" }));
 };
 
-// Market → UI Symbols
-const marketSymbols = {
-  Forex: ["EURUSD", "AUDJPY"],
-  Synthetic: ["Boom1000", "Crash300"],
-  Commodities: ["XAUUSD", "XAGUSD"],
-  Crypto: ["BTCUSD", "ETHUSD"]
+ws.onmessage = (msg) => {
+  const data = JSON.parse(msg.data);
+
+  // Step 1: Populate symbols
+  if (data.active_symbols) {
+    data.active_symbols.forEach(sym => {
+      const market = sym.market_display_name;
+      if (symbolGroups[market]) {
+        symbolGroups[market].push({
+          display: sym.display_name,
+          api: sym.symbol
+        });
+        symbolMeta[sym.symbol] = {
+          display: sym.display_name,
+          pip: sym.pip,
+        };
+      }
+    });
+    populateMarketType();
+  }
+
+  // Step 2: Get trading conditions like min lot
+  if (data.trading_conditions) {
+    const s = data.echo_req.symbol;
+    symbolMeta[s].minLot = data.trading_conditions.stake_boundary.min || 0.01;
+  }
+
+  // Step 3: Get entry price (tick)
+  if (data.tick) {
+    document.getElementById("entryPrice").value = data.tick.quote.toFixed(5);
+  }
 };
 
-// Load symbols
+// 👇 Populate Market Type dropdown
+function populateMarketType() {
+  const marketType = document.getElementById("marketType");
+  Object.keys(symbolGroups).forEach(group => {
+    if (symbolGroups[group].length > 0) {
+      const opt = document.createElement("option");
+      opt.value = group;
+      opt.textContent = group;
+      marketType.appendChild(opt);
+    }
+  });
+}
+
+// 🔁 Update Symbol dropdown when market type changes
 document.getElementById("marketType").addEventListener("change", function () {
   const market = this.value;
   const symbolSelect = document.getElementById("symbol");
-  symbolSelect.innerHTML = '<option value="">Select Symbol</option>';
-  if (marketSymbols[market]) {
-    marketSymbols[market].forEach(sym => {
+  symbolSelect.innerHTML = `<option value="">Select Symbol</option>`;
+  if (symbolGroups[market]) {
+    symbolGroups[market].forEach(({ display, api }) => {
       const option = document.createElement("option");
-      option.value = sym;
-      option.textContent = sym;
+      option.value = api;
+      option.textContent = display;
       symbolSelect.appendChild(option);
     });
   }
 });
 
-// Fetch price when symbol selected
+// 🔄 On symbol select → fetch conditions + price
 document.getElementById("symbol").addEventListener("change", function () {
-  const symbolKey = this.value;
-  const apiSymbol = derivSymbols[symbolKey];
+  const apiSymbol = this.value;
+  selectedSymbolAPI = apiSymbol;
+
   if (!apiSymbol) return;
 
-  ws.send(JSON.stringify({ ticks: apiSymbol }));
+  // Request trading conditions
+  ws.send(JSON.stringify({ trading_conditions: 1, symbol: apiSymbol }));
 
-  ws.onmessage = function (msg) {
-    const data = JSON.parse(msg.data);
-    if (data.tick) {
-      document.getElementById("entryPrice").value = data.tick.quote.toFixed(5);
-    }
-  };
+  // Request tick price
+  ws.send(JSON.stringify({ ticks: apiSymbol }));
 });
 
-// FORM SUBMIT
+// 🧮 Handle form submit
 document.getElementById("positionForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const symbol = document.getElementById("symbol").value;
   const tradeType = document.querySelector('input[name="tradeType"]:checked').value;
   const balance = parseFloat(document.getElementById("balance").value);
   const riskMode = document.querySelector('input[name="riskMode"]:checked').value;
@@ -78,13 +105,17 @@ document.getElementById("positionForm").addEventListener("submit", function (e) 
   const slInput = parseFloat(document.getElementById("stopLoss").value);
   const tp = parseFloat(document.getElementById("takeProfit").value);
 
-  if (!symbolData[symbol]) return alert("Symbol data missing!");
+  const symbolInfo = symbolMeta[selectedSymbolAPI];
+  if (!symbolInfo) return alert("Symbol info missing!");
 
-  const { minLot, contractSize } = symbolData[symbol];
+  const contractSize = 100000; // Default contract size for most FX
+  const pipDecimal = symbolInfo.pip || 0.0001;
+  const minLot = symbolInfo.minLot || 0.01;
+
+  // Convert SL to price
   let stopLossPrice = 0;
-
   if (slMode === "pips") {
-    const pip = slInput / 10000;
+    const pip = slInput * pipDecimal;
     stopLossPrice = tradeType === "Buy" ? entry - pip : entry + pip;
   } else {
     stopLossPrice = slInput;
@@ -100,10 +131,10 @@ document.getElementById("positionForm").addEventListener("submit", function (e) 
   const profitPotential = lotSize * contractSize * Math.abs(tp - entry);
   const rrRatio = profitPotential / lossPotential;
 
-  document.getElementById("result").innerHTML = `
-    <h3>Results for ${symbol}</h3>
+  const resultHTML = `
+    <h3>Results for ${symbolInfo.display}</h3>
     <ul>
-      <li><strong>Min Lot Size:</strong> ${minLot}</li>
+      <li><strong>Min Lot:</strong> ${minLot}</li>
       <li><strong>Risk Amount:</strong> ${riskAmount.toFixed(2)}</li>
       <li><strong>Recommended Lot:</strong> ${lotSize.toFixed(4)}</li>
       <li><strong>Potential Loss:</strong> ${lossPotential.toFixed(2)}</li>
@@ -111,12 +142,16 @@ document.getElementById("positionForm").addEventListener("submit", function (e) 
       <li><strong>RR Ratio:</strong> ${rrRatio.toFixed(2)} : 1</li>
     </ul>
   `;
+  document.getElementById("result").innerHTML = resultHTML;
 
-  document.getElementById("eaSuggestion").style.display =
-    lotSize < minLot ? "block" : "none";
+  // Show EA Suggestion
+  const eaBox = document.getElementById("eaSuggestion");
+  eaBox.style.display = lotSize < minLot ? "block" : "none";
 
-  const shareText = `Super Deriv | Position Size Result for ${symbol}:
-Lot Size: ${lotSize.toFixed(4)}
+  // Shareable message
+  const shareText = `Super Deriv | Position Result:
+Symbol: ${symbolInfo.display}
+Lot: ${lotSize.toFixed(4)}
 Risk: ${riskAmount.toFixed(2)}
 RR: ${rrRatio.toFixed(2)}:1
 https://superderiv.com`;
@@ -125,8 +160,7 @@ https://superderiv.com`;
   document.getElementById("telegramShare").href = "https://t.me/share/url?text=" + encodeURIComponent(shareText);
 });
 
-// COPY RESULT
 function copyResult() {
-  const result = document.getElementById("result").innerText;
-  navigator.clipboard.writeText(result).then(() => alert("Copied!"));
+  const text = document.getElementById("result").innerText;
+  navigator.clipboard.writeText(text).then(() => alert("Copied!"));
 }
