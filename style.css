@@ -1,36 +1,38 @@
 :root {
-  /* Light Mode Colors */
-  --bg: linear-gradient(135deg, #f87575, #f84545, #d82020); /* background gradient */
-  --text: #1a1a1a;
-  --accent: #ff5c5c;
-  --secondary: #ffeaea;
+  --accent: #DD2F3A;
+  --white: #ffffff;
+  --black: #000000;
 }
 
+/* Light Mode */
 body.light-mode {
-  --bg: linear-gradient(135deg, #f87575, #f84545, #d82020); /* reuse for consistency */
-  --text: #1a1a1a;
-  --accent: #ff5c5c;
-  --secondary: #ffeaea;
+  --bg: var(--white);
+  --text: var(--black);
+  --btn-bg: var(--accent);
+  --btn-text: var(--white);
+  --nav-bg: #fce7e9;
 }
 
-body.dark-mode, body:not(.light-mode) {
-  --bg: linear-gradient(135deg, #2b0000, #3d0a0a, #1f0101);
-  --text: #ffffff;
-  --accent: #d13232;
-  --secondary: #1a1a1a;
+/* Dark Mode */
+body.dark-mode {
+  --bg: var(--black);
+  --text: var(--white);
+  --btn-bg: var(--accent);
+  --btn-text: var(--white);
+  --nav-bg: #331012;
 }
 
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: var(--bg);
+  background-color: var(--bg);
   color: var(--text);
   transition: background 0.3s ease, color 0.3s ease;
   min-height: 100vh;
 }
 
 header {
-  background-color: var(--secondary);
+  background-color: var(--nav-bg);
   padding: 10px 20px;
   position: relative;
 }
@@ -67,6 +69,7 @@ header {
 .theme-toggle {
   font-size: 22px;
   cursor: pointer;
+  color: var(--accent);
 }
 
 .nav-links {
@@ -88,7 +91,7 @@ header {
 
 .nav-links li a:hover {
   background-color: var(--accent);
-  color: white;
+  color: var(--white);
 }
 
 .soon {
@@ -123,31 +126,31 @@ header {
   flex-wrap: wrap;
 }
 
-.icon-btn {
-  background: #ff5c5c;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  width: 50px;
-  height: 50px;
+.btn {
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  padding: 12px 20px;
+  text-decoration: none;
+  border-radius: 8px;
   font-weight: bold;
-  font-size: 18px;
-  box-shadow: inset -5px -5px 12px #ff7c7c, inset 5px 5px 12px #ff3c3c;
   transition: 0.3s;
 }
 
-body.dark-mode .icon-btn {
-  background: #d13232;
-  box-shadow: inset -3px -3px 10px #f15f5f, inset 3px 3px 10px #a82020;
+.btn:hover {
+  opacity: 0.85;
 }
 
-
-.icon-btn:hover {
-  opacity: 0.8;
+.btn.secondary {
+  background-color: var(--nav-bg);
+  color: var(--accent);
 }
 
-.icon-btn.secondary {
-  background-color: var(--secondary);
+footer {
+  text-align: center;
+  padding: 15px;
+  background-color: var(--nav-bg);
+  font-size: 14px;
+  color: #888;
 }
 
 .background-blob {
@@ -163,15 +166,6 @@ body.dark-mode .icon-btn {
   opacity: 0.6;
 }
 
-
-footer {
-  text-align: center;
-  padding: 15px;
-  background-color: var(--secondary);
-  font-size: 14px;
-  color: #ccc;
-}
-
 /* Responsive Sidebar */
 @media screen and (max-width: 768px) {
   .menu-toggle {
@@ -181,7 +175,7 @@ footer {
   nav {
     display: none;
     flex-direction: column;
-    background-color: var(--secondary);
+    background-color: var(--nav-bg);
   }
 
   nav.show {
