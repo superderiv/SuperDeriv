@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Position Size Calculator - Super Deriv</title>
+  <title>Position Size Calculator | Super Deriv</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="light-mode">
@@ -16,7 +16,6 @@
       <div class="menu-toggle" id="menuToggle">&#9776;</div>
       <div class="theme-toggle" id="themeToggle" title="Toggle Dark/Light">🌙</div>
     </div>
-
     <nav id="sidebarNav">
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
@@ -30,29 +29,97 @@
 
   <main class="calculator-page">
     <h2>Position Size Calculator</h2>
-    <p>Calculate how many lots to trade based on your risk %.</p>
 
     <form id="positionForm" class="calc-form">
-      <label>
-        Account Balance ($):
-        <input type="number" id="balance" required />
+
+      <!-- Market Type & Symbol -->
+      <label>Market Type:
+        <select id="marketType" required>
+          <option value="">Select Market</option>
+          <option value="Forex">Forex Pairs</option>
+          <option value="Synthetic">Synthetic Indices</option>
+          <option value="Commodities">Commodities</option>
+          <option value="Crypto">Cryptocurrencies</option>
+        </select>
       </label>
-      <label>
-        Risk Percentage (%):
-        <input type="number" id="riskPercent" step="0.01" required />
+
+      <label>Symbol:
+        <select id="symbol" required>
+          <option value="">Select Symbol</option>
+        </select>
       </label>
-      <label>
-        Stop Loss (pips):
-        <input type="number" id="stopLoss" required />
+
+      <!-- Trade Type & Currency -->
+      <label>Trade Type:
+        <div class="radio-group">
+          <label><input type="radio" name="tradeType" value="Buy" checked /> Buy</label>
+          <label><input type="radio" name="tradeType" value="Sell" /> Sell</label>
+        </div>
       </label>
-      <label>
-        Pip Value ($):
-        <input type="number" id="pipValue" step="0.01" required />
+
+      <label>Account Currency:
+        <select id="currency">
+          <option value="USD" selected>USD</option>
+          <option value="GBP">GBP</option>
+          <option value="JPY">JPY</option>
+        </select>
       </label>
-      <button type="submit" class="btn">Calculate</button>
+
+      <!-- Balance & Risk -->
+      <label>Account Balance:
+        <input type="number" id="balance" placeholder="e.g., 1000" required />
+      </label>
+
+      <label>Risk:
+        <div class="toggle-field">
+          <input type="radio" name="riskMode" value="percent" checked /> %
+          <input type="radio" name="riskMode" value="amount" /> Amount
+        </div>
+        <input type="number" id="riskValue" placeholder="e.g., 1 or $10" required />
+      </label>
+
+      <!-- Price Inputs -->
+      <label>Entry Price:
+        <input type="number" id="entryPrice" placeholder="Auto-fetched or enter manually" required />
+      </label>
+
+      <label>Stop Loss:
+        <div class="toggle-field">
+          <input type="radio" name="slMode" value="pips" checked /> Pips
+          <input type="radio" name="slMode" value="price" /> Price
+        </div>
+        <input type="number" id="stopLoss" placeholder="e.g., 50 pips or 1.1020" required />
+      </label>
+
+      <label>Take Profit:
+        <input type="number" id="takeProfit" placeholder="e.g., 1.1070 or 60 pips" required />
+      </label>
+
+      <div class="cta-group">
+        <button type="reset" class="btn secondary">Reset</button>
+        <button type="submit" class="btn">Calculate</button>
+      </div>
     </form>
 
     <div id="result" class="calc-result"></div>
+
+    <!-- Share Options -->
+    <div class="share-buttons">
+      <button onclick="copyResult()">📋 Copy</button>
+      <a href="#" id="whatsappShare" target="_blank">📱 WhatsApp</a>
+      <a href="#" id="telegramShare" target="_blank">💬 Telegram</a>
+    </div>
+
+    <!-- EA CTA (only shows if needed) -->
+    <div id="eaSuggestion" class="ea-cta" style="display:none;">
+      <p>Recommended lot is below the symbol's minimum lot size. Try our <strong>Lot Size Cutter EA</strong>.</p>
+      <a href="#" class="btn">Try Now</a>
+    </div>
+
+    <!-- Placeholder for Deriv Marketing Banner -->
+    <div class="affiliate-banner">
+      <!-- Your banner/link will be inserted here -->
+    </div>
   </main>
 
   <footer>
@@ -60,25 +127,6 @@
   </footer>
 
   <script src="script.js"></script>
-  <script>
-    document.getElementById('positionForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const balance = parseFloat(document.getElementById('balance').value);
-      const riskPercent = parseFloat(document.getElementById('riskPercent').value);
-      const stopLoss = parseFloat(document.getElementById('stopLoss').value);
-      const pipValue = parseFloat(document.getElementById('pipValue').value);
-
-      if (balance <= 0 || riskPercent <= 0 || stopLoss <= 0 || pipValue <= 0) {
-        alert("Please enter positive values for all fields.");
-        return;
-      }
-
-      const riskAmount = (balance * riskPercent) / 100;
-      const positionSize = riskAmount / (stopLoss * pipValue);
-
-      document.getElementById('result').innerHTML =
-        `<strong>Recommended Position Size:</strong> ${positionSize.toFixed(2)} lots`;
-    });
-  </script>
+  <script src="position-calculator.js"></script> <!-- Separate JS for calculator logic -->
 </body>
 </html>
