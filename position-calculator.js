@@ -1,4 +1,19 @@
-// Symbol data (placeholder)
+const derivAppID = "B5xH6FKkZi0OmFA";
+const ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${derivAppID}`);
+
+// Symbol mapping
+const derivSymbols = {
+  EURUSD: "frxEURUSD",
+  AUDJPY: "frxAUDJPY",
+  Boom1000: "boom_1000_index",
+  Crash300: "crash_300_index",
+  XAUUSD: "frxXAUUSD",
+  XAGUSD: "frxXAGUSD",
+  BTCUSD: "cryBTCUSD",
+  ETHUSD: "cryETHUSD",
+};
+
+// Symbol data (contractSize, minLot)
 const symbolData = {
   EURUSD: { minLot: 0.01, contractSize: 100000 },
   AUDJPY: { minLot: 0.01, contractSize: 100000 },
@@ -10,7 +25,7 @@ const symbolData = {
   ETHUSD: { minLot: 0.01, contractSize: 10 },
 };
 
-// Market type → symbols
+// Market → UI Symbols
 const marketSymbols = {
   Forex: ["EURUSD", "AUDJPY"],
   Synthetic: ["Boom1000", "Crash300"],
@@ -18,14 +33,14 @@ const marketSymbols = {
   Crypto: ["BTCUSD", "ETHUSD"]
 };
 
-// Load symbols when market changes
-document.getElementById('marketType').addEventListener('change', function () {
+// Load symbols
+document.getElementById("marketType").addEventListener("change", function () {
   const market = this.value;
-  const symbolSelect = document.getElementById('symbol');
+  const symbolSelect = document.getElementById("symbol");
   symbolSelect.innerHTML = '<option value="">Select Symbol</option>';
   if (marketSymbols[market]) {
     marketSymbols[market].forEach(sym => {
-      const option = document.createElement('option');
+      const option = document.createElement("option");
       option.value = sym;
       option.textContent = sym;
       symbolSelect.appendChild(option);
@@ -33,33 +48,44 @@ document.getElementById('marketType').addEventListener('change', function () {
   }
 });
 
-// Form submit handler
-document.getElementById('positionForm').addEventListener('submit', function (e) {
+// Fetch price when symbol selected
+document.getElementById("symbol").addEventListener("change", function () {
+  const symbolKey = this.value;
+  const apiSymbol = derivSymbols[symbolKey];
+  if (!apiSymbol) return;
+
+  ws.send(JSON.stringify({ ticks: apiSymbol }));
+
+  ws.onmessage = function (msg) {
+    const data = JSON.parse(msg.data);
+    if (data.tick) {
+      document.getElementById("entryPrice").value = data.tick.quote.toFixed(5);
+    }
+  };
+});
+
+// FORM SUBMIT
+document.getElementById("positionForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const symbol = document.getElementById('symbol').value;
+  const symbol = document.getElementById("symbol").value;
   const tradeType = document.querySelector('input[name="tradeType"]:checked').value;
-  const balance = parseFloat(document.getElementById('balance').value);
+  const balance = parseFloat(document.getElementById("balance").value);
   const riskMode = document.querySelector('input[name="riskMode"]:checked').value;
-  const riskValue = parseFloat(document.getElementById('riskValue').value);
-  const entry = parseFloat(document.getElementById('entryPrice').value);
+  const riskValue = parseFloat(document.getElementById("riskValue").value);
+  const entry = parseFloat(document.getElementById("entryPrice").value);
   const slMode = document.querySelector('input[name="slMode"]:checked').value;
-  const slInput = parseFloat(document.getElementById('stopLoss').value);
-  const tp = parseFloat(document.getElementById('takeProfit').value);
+  const slInput = parseFloat(document.getElementById("stopLoss").value);
+  const tp = parseFloat(document.getElementById("takeProfit").value);
 
-  if (!symbolData[symbol]) {
-    alert("Symbol data not found!");
-    return;
-  }
+  if (!symbolData[symbol]) return alert("Symbol data missing!");
 
-  const contractSize = symbolData[symbol].contractSize;
-  const minLot = symbolData[symbol].minLot;
-
-  // Calculate SL in price
+  const { minLot, contractSize } = symbolData[symbol];
   let stopLossPrice = 0;
+
   if (slMode === "pips") {
-    const pipValue = slInput / 10000;
-    stopLossPrice = tradeType === "Buy" ? entry - pipValue : entry + pipValue;
+    const pip = slInput / 10000;
+    stopLossPrice = tradeType === "Buy" ? entry - pip : entry + pip;
   } else {
     stopLossPrice = slInput;
   }
@@ -69,53 +95,38 @@ document.getElementById('positionForm').addEventListener('submit', function (e) 
     : riskValue;
 
   const pipDifference = Math.abs(entry - stopLossPrice);
-  const pipDecimal = pipDifference < 1 ? 10000 : 1;
-
   const lotSize = riskAmount / (pipDifference * contractSize);
   const lossPotential = lotSize * contractSize * pipDifference;
   const profitPotential = lotSize * contractSize * Math.abs(tp - entry);
   const rrRatio = profitPotential / lossPotential;
 
-  let resultHtml = `
+  document.getElementById("result").innerHTML = `
     <h3>Results for ${symbol}</h3>
     <ul>
       <li><strong>Min Lot Size:</strong> ${minLot}</li>
       <li><strong>Risk Amount:</strong> ${riskAmount.toFixed(2)}</li>
-      <li><strong>Recommended Lot Size:</strong> ${lotSize.toFixed(4)}</li>
+      <li><strong>Recommended Lot:</strong> ${lotSize.toFixed(4)}</li>
       <li><strong>Potential Loss:</strong> ${lossPotential.toFixed(2)}</li>
       <li><strong>Potential Profit:</strong> ${profitPotential.toFixed(2)}</li>
-      <li><strong>Risk/Reward Ratio:</strong> ${rrRatio.toFixed(2)}</li>
+      <li><strong>RR Ratio:</strong> ${rrRatio.toFixed(2)} : 1</li>
     </ul>
   `;
 
-  const resultContainer = document.getElementById('result');
-  resultContainer.innerHTML = resultHtml;
+  document.getElementById("eaSuggestion").style.display =
+    lotSize < minLot ? "block" : "none";
 
-  // EA Suggestion
-  const eaBox = document.getElementById("eaSuggestion");
-  if (lotSize < minLot) {
-    eaBox.style.display = "block";
-  } else {
-    eaBox.style.display = "none";
-  }
-
-  // Share buttons update
   const shareText = `Super Deriv | Position Size Result for ${symbol}:
-- Lot Size: ${lotSize.toFixed(4)}
-- Risk: ${riskAmount.toFixed(2)}
-- RR Ratio: ${rrRatio.toFixed(2)}
-https://superderiv.com`; // Update URL later
+Lot Size: ${lotSize.toFixed(4)}
+Risk: ${riskAmount.toFixed(2)}
+RR: ${rrRatio.toFixed(2)}:1
+https://superderiv.com`;
 
-  document.getElementById("whatsappShare").href =
-    "https://wa.me/?text=" + encodeURIComponent(shareText);
-
-  document.getElementById("telegramShare").href =
-    "https://t.me/share/url?text=" + encodeURIComponent(shareText);
+  document.getElementById("whatsappShare").href = "https://wa.me/?text=" + encodeURIComponent(shareText);
+  document.getElementById("telegramShare").href = "https://t.me/share/url?text=" + encodeURIComponent(shareText);
 });
 
-// Copy result to clipboard
+// COPY RESULT
 function copyResult() {
   const result = document.getElementById("result").innerText;
-  navigator.clipboard.writeText(result)
-    .then(() => alert("Copied to clipboard!"));
+  navigator.clipboard.writeText(result).then(() => alert("Copied!"));
 }
