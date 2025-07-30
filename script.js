@@ -10,4 +10,6 @@ toggleSidebarBtn.addEventListener('click', () => {
 // Dark/light mode toggle
 toggleThemeBtn.addEventListener('click', () => {
   document.body.classList.toggle('dark');
+  themeToggle.style.color = isLight ? "#ff5c5c" : "#ffffff";
+
 });
