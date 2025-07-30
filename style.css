@@ -150,6 +150,54 @@ header {
   text-align: center;
 }
 
+.calc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 400px;
+  margin: 0 auto 30px;
+  text-align: left;
+}
+
+.calc-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.calc-form input {
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.calc-form .btn {
+  width: 100%;
+  margin-top: 10px;
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.calc-form .btn:hover {
+  opacity: 0.85;
+}
+
+.calc-result {
+  font-size: 18px;
+  text-align: center;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+
 .calculator-page h2 {
   font-size: 28px;
   margin-bottom: 10px;
