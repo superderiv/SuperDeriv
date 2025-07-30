@@ -190,6 +190,14 @@ header {
   opacity: 0.85;
 }
 
+.toggle-field {
+  display: flex;
+  gap: 20px;
+  margin: 5px 0;
+  font-weight: 500;
+  align-items: center;
+}
+
 .calc-result {
   font-size: 18px;
   text-align: center;
@@ -197,6 +205,22 @@ header {
   color: var(--accent);
 }
 
+.share-buttons {
+  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+.share-buttons button,
+.share-buttons a {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  padding: 10px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
 
 .calculator-page h2 {
   font-size: 28px;
