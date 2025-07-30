@@ -2,45 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Super Deriv</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <div class="top-bar">
-      <div class="logo">
-        <img src="Super Deriv.png" alt="Super Deriv Logo" />
-        <h1>Super Deriv</h1>
-      </div>
-      <div class="menu-toggle" id="menuToggle">&#9776;</div>
-      <div class="theme-toggle" id="themeToggle" title="Toggle Dark/Light">&#9728;</div>
-    </div>
-    
-    <nav id="sidebarNav">
-      <ul class="nav-links">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Calculators</a></li>
-        <li><a href="#">Deriv EAs <span class="soon">Coming Soon</span></a></li>
-        <li><a href="#">Join Deriv</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <h2 class="logo">⚡ Super Deriv</h2>
+      <nav class="nav-links">
+        <a href="#">Dashboard</a>
+        <a href="#">Trading Tools</a>
+        <a href="#">Open A/C</a>
+        <a href="#">Learn Trading</a>
+        <a href="#">Custom Bots</a>
+        <a href="#">Expert Signals</a>
+      </nav>
+    </aside>
 
-  <main class="home-section">
-    <h2>Welcome to Super Deriv</h2>
-    <p>Your one-stop app for Deriv calculators, trading tools, and more. Start calculating, learning, and earning smarter with Super Deriv.</p>
-    
-    <div class="cta-buttons">
-      <a href="#" class="btn">Use Calculators</a>
-      <a href="#" class="btn secondary">Join Deriv Now</a>
-    </div>
-  </main>
+    <!-- Main Content -->
+    <main class="main">
+      <header class="main-header">
+        <button id="toggleSidebar">☰</button>
+        <div class="actions">
+          <button id="toggleTheme">🌙</button>
+        </div>
+      </header>
 
-  <footer>
-    <p>&copy; 2025 Super Deriv. Built for Deriv traders by a Deriv trader.</p>
-  </footer>
+      <section class="content">
+        <h1>Welcome to Super Deriv</h1>
+        <p>This is your all-in-one trading toolkit.</p>
+      </section>
+    </main>
+  </div>
 
   <script src="script.js"></script>
 </body>
