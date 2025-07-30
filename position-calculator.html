@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Position Size Calculator - Super Deriv</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="light-mode">
+  <header>
+    <div class="top-bar">
+      <div class="logo">
+        <img src="Super Deriv.png" alt="Super Deriv Logo" />
+        <h1>Super Deriv</h1>
+      </div>
+      <div class="menu-toggle" id="menuToggle">&#9776;</div>
+      <div class="theme-toggle" id="themeToggle" title="Toggle Dark/Light">🌙</div>
+    </div>
+
+    <nav id="sidebarNav">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="calculators.html">Calculators</a></li>
+        <li><a href="#">Deriv EAs</a></li>
+        <li><a href="#">Join Deriv</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="calculator-page">
+    <h2>Position Size Calculator</h2>
+    <p>Calculate how many lots to trade based on your risk %.</p>
+
+    <form id="positionForm" class="calc-form">
+      <label>
+        Account Balance ($):
+        <input type="number" id="balance" required />
+      </label>
+      <label>
+        Risk Percentage (%):
+        <input type="number" id="riskPercent" step="0.01" required />
+      </label>
+      <label>
+        Stop Loss (pips):
+        <input type="number" id="stopLoss" required />
+      </label>
+      <label>
+        Pip Value ($):
+        <input type="number" id="pipValue" step="0.01" required />
+      </label>
+      <button type="submit" class="btn">Calculate</button>
+    </form>
+
+    <div id="result" class="calc-result"></div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Super Deriv. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    document.getElementById('positionForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const balance = parseFloat(document.getElementById('balance').value);
+      const riskPercent = parseFloat(document.getElementById('riskPercent').value);
+      const stopLoss = parseFloat(document.getElementById('stopLoss').value);
+      const pipValue = parseFloat(document.getElementById('pipValue').value);
+
+      if (balance <= 0 || riskPercent <= 0 || stopLoss <= 0 || pipValue <= 0) {
+        alert("Please enter positive values for all fields.");
+        return;
+      }
+
+      const riskAmount = (balance * riskPercent) / 100;
+      const positionSize = riskAmount / (stopLoss * pipValue);
+
+      document.getElementById('result').innerHTML =
+        `<strong>Recommended Position Size:</strong> ${positionSize.toFixed(2)} lots`;
+    });
+  </script>
+</body>
+</html>
