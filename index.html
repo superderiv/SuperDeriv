@@ -8,11 +8,16 @@
 </head>
 <body>
   <header>
-    <div class="logo">
-      <img src="Super Deriv.png" alt="Super Deriv Logo" />
-      <h1>Super Deriv</h1>
+    <div class="top-bar">
+      <div class="logo">
+        <img src="Super Deriv.png" alt="Super Deriv Logo" />
+        <h1>Super Deriv</h1>
+      </div>
+      <div class="menu-toggle" id="menuToggle">&#9776;</div>
+      <div class="theme-toggle" id="themeToggle" title="Toggle Dark/Light">&#9728;</div>
     </div>
-    <nav>
+    
+    <nav id="sidebarNav">
       <ul class="nav-links">
         <li><a href="#">Home</a></li>
         <li><a href="#">Calculators</a></li>
@@ -36,5 +41,7 @@
   <footer>
     <p>&copy; 2025 Super Deriv. Built for Deriv traders by a Deriv trader.</p>
   </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
