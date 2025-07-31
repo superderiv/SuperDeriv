@@ -2,6 +2,9 @@
   --accent: #DD2F3A;
   --white: #ffffff;
   --black: #000000;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --rounded: 8px;
+  --transition: all 0.3s ease;
 }
 
 /* Light Mode */
@@ -126,6 +129,7 @@ header {
   flex-wrap: wrap;
 }
 
+
 .btn {
   background-color: var(--btn-bg);
   color: var(--btn-text);
@@ -144,6 +148,60 @@ header {
   background-color: var(--nav-bg);
   color: var(--accent);
 }
+
+ /* Search */
+.search-section {
+ padding: 5px 0;
+ background-color: var(--white);
+ margin-top: -5px;
+ border-radius: 8px;
+ box-shadow: var(--shadow);
+ position: relative;
+ z-index: 10;
+ max-width: 900px;
+ margin-left: auto;
+ margin-right: auto;
+ }
+        
+.search-container {
+padding: 0 0px;
+ }
+        
+.search-bar {
+display: flex;
+max-width: 890px;
+margin: 0 auto;
+        }
+        
+.search-bar input {
+flex: 1;
+padding: 12px 20px;
+border: 1px solid #e2e8f0;
+border-radius: 8px;
+font-size: 16px;
+outline: none;
+transition: var(--transition);
+}
+        
+.search-bar input:focus {
+border-color: var(--btn-bg);
+ }
+        
+.search-bar button {
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  padding: 12px 20px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+
+.search-bar button:hover {
+ opacity: 0.85;  
+ }
+        
 
 .calculator-page {
   padding: 40px 20px;
@@ -221,7 +279,9 @@ header {
   border: none;
   cursor: pointer;
 }
-
+  .calculator-section {
+            padding: 60px 0;
+        }
 .calculator-page h2 {
   font-size: 28px;
   margin-bottom: 10px;
@@ -258,7 +318,6 @@ header {
   box-shadow: 0 6px 12px rgba(0,0,0,0.2);
 }
 
-
 footer {
   text-align: center;
   padding: 15px;
@@ -279,6 +338,47 @@ footer {
   z-index: -1;
   opacity: 0.6;
 }
+
+/* Search Results */
+        .search-results {
+            display: none;
+            background-color: var(--white);
+            border-radius: var(--rounded);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-top: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-results h3 {
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+        }
+
+        .search-results ul {
+            list-style: none;
+        }
+
+        .search-results ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .search-results ul li:last-child {
+            border-bottom: none;
+        }
+
+        .search-results ul li a {
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .search-results ul li a:hover {
+            color: var(--primary-blue);
+        }
 
 /* Responsive Sidebar */
 @media screen and (max-width: 768px) {
