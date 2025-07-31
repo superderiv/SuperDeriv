@@ -11,23 +11,84 @@
   </script>
 </head>
 <body class="light-mode">
-  <header>…(same header as before)…</header>
+  <header>
+    <div class="top-bar">
+      <div class="logo">
+        <img src="Super Deriv.png" alt="Super Deriv Logo" />
+        <h1>Super Deriv</h1>
+        <div class="background-blob"></div>
+      </div>
+      <div class="menu-toggle" id="menuToggle">&#9776;</div>
+      <div class="theme-toggle" id="themeToggle" title="Toggle Dark/Light">🌙</div>
+    </div>
+    <nav ="sidebarNav"id>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#calculators">Calculators</a></li>
+        <li><a href="#deriv-eas">Deriv EAs <span class="soon">Coming Soon</span></a></li>
+        <li><a href="#join-deriv">Join Deriv</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
 
   <main class="calculator-page">
     <h2>Position Size Calculator</h2>
 
     <form id="positionForm" class="calc-form">
-      <label>
-        Symbol:
+      <label>Symbol:
         <select id="symbol" required>
-          <option value="">Loading symbols…</option>
+          <option value="">Select Symbol</option>
         </select>
       </label>
-      <label>
-        Entry Price:
-        <input type="number" id="entryPrice" placeholder="Auto-updated" required />
+
+      <!-- Trade Type & Currency -->
+      <label>Trade Type:
+        <div class="radio-group">
+          <label><input type="radio" name="tradeType" value="Buy" checked /> Buy</label>
+          <label><input type="radio" name="tradeType" value="Sell" /> Sell</label>
+        </div>
       </label>
-      …(other fields same as previous)…
+
+      <label>Account Currency:
+        <select id="currency">
+          <option value="USD" selected>USD</option>
+          <option value="GBP">GBP</option>
+          <option value="JPY">JPY</option>
+        </select>
+      </label>
+
+      <!-- Balance & Risk -->
+      <label>Account Balance:
+        <input type="number" id="balance" placeholder="e.g., 1000" required />
+      </label>
+
+      <label>Risk:
+        <div class="toggle-field">
+          <input type="radio" name="riskMode" value="percent" checked /> %
+          <input type="radio" name="riskMode" value="amount" /> Amount
+        </div>
+        <input type="number" id="riskValue" placeholder="e.g., 1 or $10" required />
+      </label>
+
+      <!-- Price Inputs -->
+      <label>Entry Price:
+        <input type="number" id="entryPrice" placeholder="Auto-fetched or enter manually" required />
+      </label>
+
+      <label>Stop Loss:
+        <div class="toggle-field">
+          <input type="radio" name="slMode" value="pips" checked /> Pips
+          <input type="radio" name="slMode" value="price" /> Price
+        </div>
+        <input type="number" id="stopLoss" placeholder="e.g., 50 pips or 1.1020" required />
+      </label>
+
+      <label>Take Profit:
+        <input type="number" id="takeProfit" placeholder="e.g., 1.1070 or 60 pips" required />
+      </label>
+
       <div class="cta-group">
         <button type="reset" class="btn secondary">Reset</button>
         <button type="submit" class="btn">Calculate</button>
@@ -35,12 +96,61 @@
     </form>
 
     <div id="result" class="calc-result"></div>
-    <div class="share-buttons">…</div>
-    <div id="eaSuggestion" class="ea-cta" style="display:none;">…</div>
-    <div class="affiliate-banner"></div>
-  </main>
 
-  <footer>…</footer>
+    <!-- Share Options -->
+    <div class="share-buttons">
+      <button onclick="copyResult()">📋 Copy</button>
+      <a href="#" id="whatsappShare" target="_blank">📱 WhatsApp</a>
+      <a href="#" id="telegramShare" target="_blank">💬 Telegram</a>
+    </div>
+
+    <!-- EA CTA (only shows if needed) -->
+    <div id="eaSuggestion" class="ea-cta" style="display:none;">
+      <p>Recommended lot is below the symbol's minimum lot size. Try our <strong>Lot Size Cutter EA</strong>.</p>
+      <a href="#" class="btn">Try Now</a>
+    </div>
+
+    <!-- Placeholder for Deriv Marketing Banner -->
+    <div class="affiliate-banner">
+      <!-- Your banner/link will be inserted here -->
+    </div>
+  </main>
+   <footer id="contact">
+      <div class="container">
+           <div class="footer-container">
+                <div class="footer-about">
+                    <a href="#" class="footer-logo">Super Deriv</a>
+    <p>Your one-stop app for Deriv calculators, trading tools, and more. Start calculating, learning, and earning smarter with Super Deriv.</p>
+                    
+                </div>
+                
+                <div class="footer-contact">
+                    <h3>Contact Us</h3>
+                  <p>✉︎<u> superderivfx@gmail.com </u></p>
+                </div>
+                
+                <div class="footer-links">
+                   <h3>Quick Links</h3>
+                    <ul>
+                      <li><u><a href="#home">Home</a></u></li>
+                      <li><u><a href="#calculators">Calculators</a></u></li>
+                      <li><u><a href="#deriv-ea">Deriv EAs</a></u></li>
+                      <li><u><a href="#join-deriv">Join Deriv</a></u></li>
+                      <li><u><a href="#privacy-policy">Privacy Policy</a></u></li>
+                      <li><u><a href="#terms-of-use">Terms of Use</a></u></li>
+                    </ul>
+                </div>
+            </div>
+             </div>
+        </div>
+            
+            <div class="footer-bottom">
+               <p>&copy; 2025 Super Deriv. Built for Deriv traders by a Deriv trader.</p>
+            </div>
+        </div>
+    
+  </footer>
+
   <script src="script.js"></script>
   <script type="module" src="position-calculator.js"></script>
 </body>
