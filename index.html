@@ -17,13 +17,13 @@
       <div class="menu-toggle" id="menuToggle">&#9776;</div>
       <div class="theme-toggle" id="themeToggle" title="Toggle Dark/Light">🌙</div>
     </div>
-    <nav id="sidebarNav">
+    <nav ="sidebarNav"id>
       <ul class="nav-links">
-        <li><a href="#">Home</a></li>
-        <li><a href="calculators.html">Calculators</a></li>
-        <li><a href="#">Deriv EAs <span class="soon">Coming Soon</span></a></li>
-        <li><a href="#">Join Deriv</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#calculators">Calculators</a></li>
+        <li><a href="#deriv-eas">Deriv EAs <span class="soon">Coming Soon</span></a></li>
+        <li><a href="#join-deriv">Join Deriv</a></li>
+        <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
   </header>
@@ -33,11 +33,41 @@
     <p>Your one-stop app for Deriv calculators, trading tools, and more. Start calculating, learning, and earning smarter with Super Deriv.</p>
 
     <div class="cta-buttons">
-      <a href="calculators.html" class="btn">Use Calculators</a>
-      <a href="#" class="btn secondary">Join Deriv Now</a>
+      <a href="#calculators" class="btn">🔢Use Calculators</a>
+      <i class="fa-solid fa-calculator"></i>
+      <a href="#join-deriv" class="btn secondary">👨🏻‍💼Join Deriv Now</a>
+    </div>
+  </main>
+ <section class="search-section">
+        <div class="search-container">
+            <div class="search-bar">
+                <input type="text" placeholder="Search a Calculator..." id="searchInput">
+                <button type="submit" id="searchButton"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="search-results" id="searchResults">
+                <h3>Search Results</h3>
+                <ul id="resultsList">
+                    <!-- Results will be populated here -->
+                </ul>
+            </div>
+        </div>
+    </section>
+
+  <main class="calculator-page" id="calculators">
+    <h2>Trading Calculators</h2>
+    <p>Select a calculator to begin:</p>
+
+    <div class="calculator-grid">
+      <a href="position-calculator.html" class="calculator-card">🧮 Position Size Calculator</a>
+      <a href="risk-reward-calculator.html" class="calculator-card">📏 Risk/Reward Calculator</a>
+      <a href="margin-calculator.html" class="calculator-card">⚖️ Margin Calculator</a>
+      <a href="pip-converter.html" class="calculator-card">🔄 Pips-to-Money Converter</a>
+      <a href="#" class="calculator-card">📉 Stop Loss Calculator</a>
+      <a href="#" class="calculator-card">📈 Take Profit Calculator</a>
     </div>
   </main>
 
+  
   <footer>
     <p>&copy; 2025 Super Deriv. Built for Deriv traders by a Deriv trader.</p>
   </footer>
