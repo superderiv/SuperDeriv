@@ -77,20 +77,22 @@
         <input type="number" id="entryPrice" placeholder="Auto-fetched or enter manually" required />
       </label>
 
+      <!-- Stop Loss -->
       <label>Stop Loss:
         <div class="toggle-field">
           <input type="radio" name="slMode" value="pips" checked /> Pips
           <input type="radio" name="slMode" value="price" /> Price
         </div>
-        <input type="number" id="stopLoss" placeholder="e.g., 50 pips or 1.1020" required />
+        <input type="number" id="stopLoss" placeholder="e.g. 50 or 1.0970" required />
       </label>
 
+      <!-- Take Profit -->
       <label>Take Profit:
         <div class="toggle-field">
-          <input type="radio" name="slMode" value="pips" checked /> Pips
-          <input type="radio" name="slMode" value="price" /> Price
+          <input type="radio" name="tpMode" value="pips" checked /> Pips
+          <input type="radio" name="tpMode" value="price" /> Price
         </div>
-        <input type="number" id="takeProfit" placeholder="e.g., 1.1070 or 60 pips" required />
+        <input type="number" id="takeProfit" placeholder="e.g. 70 or 1.1090" required />
       </label>
 
       <div class="cta-group">
