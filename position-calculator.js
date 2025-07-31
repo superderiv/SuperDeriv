@@ -77,10 +77,18 @@ import DerivAPIBasic from 'https://cdn.jsdelivr.net/npm/@deriv/deriv-api/dist/De
 
     document.getElementById('eaSuggestion').style.display = lotSize < minLot ? 'block' : 'none';
 
-    const share = `Super deriv | ${meta.display} result
-Lot: ${lotSize.toFixed(4)}, RR: ${rr.toFixed(2)}
-`;
+    const shareText = `Super Deriv | ${meta.display} result
+Symbol: ${symbolInfo.display}
+Lot: ${lotSize.toFixed(4)}
+Risk: ${riskAmount.toFixed(2)}
+RR: ${rrRatio.toFixed(2)}:1
+https://superderiv.com`;
+    
     document.getElementById('whatsappShare').href = 'https://wa.me/?text=' + encodeURIComponent(share);
     document.getElementById('telegramShare').href = 'https://t.me/share/url?text=' + encodeURIComponent(share);
   });
 })();
+function copyResult() {
+  const text = document.getElementById("result").innerText;
+  navigator.clipboard.writeText(text).then(() => alert("Copied!"));
+}
